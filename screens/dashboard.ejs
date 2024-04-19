@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- <link rel="stylesheet" type="text/css" href="/styles/style.css"> -->
+    <!-- <script src="/script/script.js"></script> -->
+</head>
+
+
+<body>
+    <h2>Welcome to the Dashboard</h2>
+    <p>Hello, <%= username %>!</p>
+    <a href="/logout">Logout</a>
+
+    <div>
+      <button class="button" onclick="openPopup()">Add Task</button>
+    </div>
+
+
+    <div id="popup" class="popup" style="display: none;" >
+        <form id="saveData" action="/save" method="POST">
+            <div>
+                <h2>Title:</h2>
+                <input type="text" id="title" name="title">
+                <button onclick="savePopup()">Save</button>
+                <button onclick="closePopup()">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <div>
+        <h1>Tasks </h1>
+            <ol>
+                <% taskName.forEach(item => { %>
+                   
+                        <div>
+                            <li>
+                                <button class="edit-button">Edit</button> 
+                                <form id="updateForm" action="/update/<%= item._id %>" method="POST">
+                                    <input type="text" value="<%= item.title %>" name="title" readonly required >
+                                    <input type="checkbox" id="completed_<%= item.id %>" name="completed" <% if(item.completed) { %> checked <% } %>>
+                                    <button  class="update" onclick="update()" data-task-id="<%= item.id %>" style="display: none;">UPDATE</button>                                
+                                </form>
+                                <button class="cancel" style="display: none;">CANCEL</button>
+                                <form action="/update/<%= item._id %>/delete" method="POST">
+                                <button type="submit">Delete</button>
+                                </form>
+                            </li> 
+                        </div>                
+                <% }); %>   
+            </ol>
+    </div>
+
+
+    <script>
+
+function openPopup() {
+  console.log("clicked")
+  document.getElementById('popup').style.display = 'block';
+}
+
+function savePopup() {
+  document.getElementById('saveData').setAttribute('action', '/save');
+  // Submit the form
+  document.getElementById('saveData').submit();
+  document.getElementById('popup').style.display = 'none';
+}
+
+function closePopup() {
+  document.getElementById('popup').style.display = 'none';
+}
+
+
+const editButtons = document.querySelectorAll('.edit-button');
+const cancelButtons = document.querySelectorAll('.cancel');
+
+// Add click event listener to each edit button
+editButtons.forEach(editButton => {
+    editButton.addEventListener('click', function() {
+      console.log("clicked");
+            this.style.display = 'none';
+            listItem = this.closest('li');
+            const inputField = listItem.querySelector('input[name="title"]');
+
+            // Toggle readonly attribute
+            inputField.readOnly = !inputField.readOnly;
+            listItem.querySelector('.update').style.display = 'inline-block';
+            listItem.querySelector('.cancel').style.display = 'inline-block';
+    });
+});
+
+
+cancel.forEach(cancelButton => {
+    cancelButton.addEventListener('click', function() {
+      console.log("clicked");
+            this.style.display = 'none';
+            listItem = this.closest('li');
+
+            listItem.querySelector('.update').style.display = 'none';
+            listItem.querySelector('.cancel').style.display = 'inline-block';
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+</html>
